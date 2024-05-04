@@ -27,4 +27,8 @@ public class StockService {
     public List<Stock> getStocks() {
         return stockRepository.findAll();
     }
+
+    public Stock getStockById(Long id) {
+        return stockRepository.findById(id).orElse(null);
+    }
 }
