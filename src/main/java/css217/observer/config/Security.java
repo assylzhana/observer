@@ -37,12 +37,12 @@ public class Security
                 .passwordEncoder(passwordEncoder());
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
-        httpSecurity.formLogin(flc -> flc.loginProcessingUrl("/sign-in")
+        httpSecurity.formLogin(flc -> flc.loginProcessingUrl("/auth")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .loginPage("/sign-in")
                 .defaultSuccessUrl("/profile",true)
-                .failureUrl("/sign-in"));
+                .failureUrl("/sign-in?error"));
 
         httpSecurity.logout(logout -> logout.logoutUrl("/logout")
                 .logoutSuccessUrl("/sign-in"));
