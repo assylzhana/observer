@@ -22,4 +22,22 @@ public class Stock {
     private float price;
     @ManyToMany
     private List<Investor> investors;
+    public void registerInvestor(Investor investor) {
+        investors.add(investor);
+    }
+
+    public void unregisterInvestor(Investor investor) {
+        investors.remove(investor);
+    }
+
+    public void notifyInvestors() {
+        for (Investor investor : investors) {
+            investor.update(this);
+        }
+    }
+
+    public void updatePrice(float price) {
+        this.price = price;
+        notifyInvestors();
+    }
 }

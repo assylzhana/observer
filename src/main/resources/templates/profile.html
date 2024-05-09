@@ -40,7 +40,10 @@
 </div>
 
 <div style="padding:20px">
-
+    <p th:if="${investor != null}">
+        Your role: <span th:text="${investor.role != null ? investor.role.name : 'Unknown'}"></span>
+    </p>
+    <p th:unless="${investor != null}">User not logged in.</p>
 </div>
 
 </body>

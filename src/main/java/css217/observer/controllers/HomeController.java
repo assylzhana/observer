@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HomeController {
     @Autowired
     private InvestorService investorService;
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleService roleService;
     @Autowired
     private StockService stockService;
     @PreAuthorize("isAnonymous()")
@@ -34,7 +34,7 @@ public class HomeController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/sign-up")
     public String signUp(Investor investor) {
-
+        investor.setRole(roleService.getRole("USER"));
         investorService.addInvestor(investor);
         return "redirect:/profile";
     }
@@ -43,15 +43,20 @@ public class HomeController {
     private String signIn(){
         return "sign-in";
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    private String profile(){
+    private String profile(Model model){
+        if (investorService.getCurrentUser() != null) {
+            model.addAttribute("investor", investorService.getCurrentUser());
+        }
         return "profile";
     }
+
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/stocks")
-    private String stocks(Model model){
-        model.addAttribute("stocks", stockService.getStocks());
+    private String stocks(){
         return "stocks";
     }
 }

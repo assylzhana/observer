@@ -5,6 +5,9 @@ import css217.observer.models.Role;
 import css217.observer.repositories.InvestorRepository;
 import css217.observer.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,7 +39,16 @@ public class InvestorService implements UserDetailsService {
     public void addInvestor(Investor investor) {
         String encodedPassword = passwordEncoder.encode(investor.getPassword());
         investor.setPassword(encodedPassword);
+        investor.setRole(roleRepository.findByName("USER"));
         investorRepository.save(investor);
+    }
+    public Investor getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken || authentication == null) {
+            return null;
+        }
+        String email = authentication.getName();
+        return (Investor) investorRepository.findByEmail(email);
     }
 
 }

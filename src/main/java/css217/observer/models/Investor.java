@@ -1,5 +1,6 @@
 package css217.observer.models;
 
+import css217.observer.observer.Observer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Investor implements UserDetails {
+public class Investor implements UserDetails, Observer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,4 +59,18 @@ public class Investor implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public void update(Stock stock) {
+        System.out.println("Notified " + name + " of price update: " + stock.getSymbol() + " - $" + stock.getPrice());
+        float stockPrice = stock.getPrice();
+        if (stockPrice < 50) {
+            System.out.println("Buying more " + stock.getSymbol() + " stocks!");
+        } else if (stockPrice > 100) {
+            System.out.println("Selling some " + stock.getSymbol() + " stocks!");
+        } else {
+            System.out.println("Observing " + stock.getSymbol() + " for now.");
+        }
+    }
+
 }
